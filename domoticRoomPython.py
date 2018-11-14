@@ -115,7 +115,7 @@ def on_disconnect(unused_client, unused_userdata, rc):
 
 def on_publish(unused_client, unused_userdata, unused_mid):
     """Paho callback when a message is sent to the broker."""
-    print('on_publish')
+##    print('on_publish')
 
 
 def on_message(unused_client, unused_userdata, message):
@@ -256,7 +256,7 @@ def main():
         ##    arduino.write('a')
         while arduino.in_waiting:
             rawDato = arduino.readline()
-            print(str(rawDato))
+##            print(str(rawDato))
             
             data={}
             data['sensorTipo'] = "luminosidad"
