@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page import="java.util.Date"%>
+<%@ page import="java.util.List"%>
 <%@ page import="com.google.appengine.api.datastore.*"%>
 <%@ page import="com.google.appengine.api.datastore.Query.*"%>
 <%@ page import="com.google.appengine.api.datastore.Query.Filter"%>
@@ -78,12 +79,14 @@
 	Filter propertyFilter =new FilterPredicate("tipo", FilterOperator.EQUAL, "luminosidad");
         
 	Query q = new Query("domotic-dato")
-					.addSort("cuando", SortDirection.ASCENDING)
+					.addSort("cuando", SortDirection.DESCENDING)
 					.setFilter(propertyFilter);
     	
 	PreparedQuery pq = datastore.prepare(q);
+	
+	List<Entity> l = pq.asList(FetchOptions.Builder.withLimit(20));
 
-	for (Entity result : pq.asIterable()) {		
+	for (Entity result : l) {		
    		Date x=(Date)result.getProperty("cuando");
 		Long y = (Long)result.getProperty("valor");
 		

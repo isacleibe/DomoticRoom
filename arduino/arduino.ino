@@ -16,10 +16,10 @@ const byte luzPin = A1;
 const byte releluzPin = 2;
 
 // PERIODOS
-const unsigned long anPer = 2000;
-const unsigned long monitorPer = 5000;
-const unsigned long sistemaPer = 5000;
-const unsigned long relePer = 5000;
+const unsigned long anPer = 1000;
+const unsigned long monitorPer = 3000;
+const unsigned long sistemaPer = 3000;
+const unsigned long relePer = 3000;
 
 //UMBRALES
 const float UMBRALLUZ = 400;
@@ -144,7 +144,7 @@ void setup_ReleLuz(struct ReleLuz& r, byte pin, unsigned long perms, unsigned lo
   r.lastms = currms - r.perms;
   
   pinMode(r.pin, OUTPUT);
-  r.estado = 0;
+  r.estado = LOW;
   digitalWrite(r.pin, r.estado);
 }
 
@@ -169,7 +169,7 @@ void loop_ReleLuz(struct ReleLuz& r, const struct Sistema& sis, unsigned long cu
     }
   }
   if(r.cambioms == currms){
-    digitalWrite(r.pin, r.estado);
+    digitalWrite(r.pin, !r.estado);
   }
 }
 

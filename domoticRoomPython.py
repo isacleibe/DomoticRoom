@@ -21,7 +21,7 @@ Before you run the sample, you must follow the instructions in the README
 for this sample.
 """
 
-import serial
+# [START iot_mqtt_includes]
 import argparse
 import datetime
 import os
@@ -35,9 +35,11 @@ import paho.mqtt.client as mqtt
 import urllib2
 import csv
 import json
-
+import serial
 
 arduino = serial.Serial('COM3', 9600)
+
+# [END iot_mqtt_includes]
 
 # The initial backoff time after a disconnection occurs, in seconds.
 minimum_backoff_time = 1
@@ -47,7 +49,6 @@ MAXIMUM_BACKOFF_TIME = 32
 
 # Whether to wait with exponential backoff before publishing.
 should_backoff = False
-
 
 
 # [START iot_mqtt_jwt]
@@ -121,6 +122,8 @@ def on_publish(unused_client, unused_userdata, unused_mid):
 def on_message(unused_client, unused_userdata, message):
     """Callback when the device receives a message on a subscription."""
     payload = str(message.payload)
+##    print('Received message \'{}\' on topic \'{}\' with Qos {}'.format(
+##            payload, message.topic, str(message.qos)))
     if (payload == 'onluz'):
         arduino.write(str('c'))
     if (payload == 'offluz'):
@@ -129,8 +132,6 @@ def on_message(unused_client, unused_userdata, message):
         arduino.write(str('b'))
     if (payload == 'nocontrol'):
         arduino.write(str('a'))
-##    print('Received message \'{}\' on topic \'{}\' with Qos {}'.format(
-##            payload, message.topic, str(message.qos)))
 
 
 def get_client(
@@ -234,7 +235,9 @@ def parse_command_line_args():
 
 
 # [START iot_mqtt_run]
-def main():    
+def main():
+    global minimum_backoff_time
+
     args = parse_command_line_args()
 
     # Publish to the events or state topic based on the flag.
@@ -249,23 +252,51 @@ def main():
         args.private_key_file, args.algorithm, args.ca_certs,
         args.mqtt_bridge_hostname, args.mqtt_bridge_port)
 
-##    arduino = serial.Serial('COM3', 9600)
-
     # Publish num_messages mesages to the MQTT bridge once per second.
     while True:
-        ##    arduino.write('a')
+##    for i in range(1, args.num_messages + 1):
+        # Process network events.
+        client.loop()
+
+        # Wait if backoff is required.
+        if should_backoff:
+            # If backoff time is too large, give up.
+            if minimum_backoff_time > MAXIMUM_BACKOFF_TIME:
+                print('Exceeded maximum backoff time. Giving up.')
+                break
+
+            # Otherwise, wait and connect again.
+            delay = minimum_backoff_time + random.randint(0, 1000) / 1000.0
+            print('Waiting for {} before reconnecting.'.format(delay))
+            time.sleep(delay)
+            minimum_backoff_time *= 2
+            client.connect(args.mqtt_bridge_hostname, args.mqtt_bridge_port)
+        
+        # [START iot_mqtt_jwt_refresh]
+        seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
+        if seconds_since_issue > 60 * jwt_exp_mins:
+            print('Refreshing token after {}s').format(seconds_since_issue)
+            jwt_iat = datetime.datetime.utcnow()
+            client = get_client(
+                args.project_id, args.cloud_region,
+                args.registry_id, args.device_id, args.private_key_file,
+                args.algorithm, args.ca_certs, args.mqtt_bridge_hostname,
+                args.mqtt_bridge_port)
+        # [END iot_mqtt_jwt_refresh]
+        
+        
         while arduino.in_waiting:
             rawDato = arduino.readline()
-##            print(str(rawDato))
-            
             data={}
             data['sensorTipo'] = "luminosidad"
             data['valor'] = rawDato
             json_data = json.dumps(data)        
             client.publish(mqtt_topic, json_data, qos=1)
 
-        client.loop()            
-        
+
+    print('Finished.')
+# [END iot_mqtt_run]
+
+
 if __name__ == '__main__':
     main()
-   

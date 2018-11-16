@@ -1,6 +1,6 @@
 <datastore-indexes autoGenerate="false">
     <datastore-index kind="domotic-dato" ancestor="false" source="manual">
         <property name="tipo" direction="asc"/>
-        <property name="cuando" direction="asc"/>
+        <property name="cuando" direction="desc"/>
 	</datastore-index>
 </datastore-indexes>
