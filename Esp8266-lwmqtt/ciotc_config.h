@@ -15,26 +15,41 @@
 // This file contains your configuration used to connect to Cloud IoT Core
 
 // WIFI
-const char* ssid = "SSID";
-const char* password = "PASSWORD";
+const char* ssid = "Jazztel";
+const char* password = "escalera";
 
 // Cloud iot details.
 const char* project_id = "domotic-room";
 const char* location = "europe-west1";
 const char* registry_id = "domotic-registro";
 const char* device_id = "domotic-tema";
-// To get the private key run (where private-key.pem is the ec private key
+// To get the private key run (where private-key.pem is the rsa private key
 // used to create the certificate uploaded to google cloud iot):
-// openssl ec -in <private-key.pem> -noout -text
+// openssl rsa -in <private-key.pem> -noout -text
 // and copy priv: part.
 // The key length should be exactly the same as the key length bellow (32 pairs
 // of hex digits). If it's bigger and it starts with "00:" delete the "00:". If
 // it's smaller add "00:" to the start. If it's too big or too small something
 // is probably wrong with your key.
 const char* private_key_str =
-    "5a:2e:06:b5:c1:f2:9c:b3:77:b2:89:f5:29:29:93:"
-    "07:fd:ed:22:0d:03:2b:a6:b1:b6:04:0b:d5:9b:49:"
-    "7d:ca";
+    "97:d0:2b:b9:ff:42:6d:4c:9d:42:dd:76:5b:e8:"
+    "75:7c:26:eb:1b:dd:14:4a:6f:b3:32:5b:27:b4:37:"
+    "b2:ce:30:08:8a:ed:29:7d:a5:38:f8:79:41:1f:2b:"
+    "9c:ec:fa:2b:ed:4f:af:18:ee:38:44:43:87:09:82:"
+    "6b:73:dc:b6:b4:4e:f1:a1:93:d4:15:d6:38:d7:c2:"
+    "94:d0:5e:f3:3a:90:9c:41:bc:0f:73:6e:81:95:b2:"
+    "a5:49:8e:b6:87:01:e9:49:f4:90:7e:4e:74:8c:3d:"
+    "bc:89:0a:61:55:a5:0c:9c:b5:27:98:1e:d4:2c:68:"
+    "6e:8d:f1:0c:47:80:c2:06:53:fe:5b:38:72:50:a5:"
+    "78:2a:92:d3:62:87:31:43:80:e1:64:c1:c2:17:92:"
+    "43:12:ee:08:dc:7a:5a:59:ac:ec:bc:2c:d3:b5:21:"
+    "4e:59:47:04:34:75:c5:72:d7:58:e9:e6:fe:2b:c6:"
+    "cd:2c:e3:c6:c7:ca:55:40:f7:ec:53:f8:09:f0:5b:"
+    "be:fa:1b:97:5d:9a:ac:22:4b:41:42:e8:75:a7:4c:"
+    "c9:24:a2:e7:95:a2:f4:83:f1:e0:71:0c:5c:58:55:"
+    "bc:3c:4a:6a:7e:f5:da:52:92:fb:42:9e:27:2c:9a:"
+    "67:02:f7:59:15:28:dd:a3:1f:22:7b:99:b0:81:ad:"
+    "b5:91";
 
 // Use the root certificate to verify tls connection rather than
 // using a fingerprint.

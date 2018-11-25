@@ -23,6 +23,8 @@
 #include <CloudIoTCore.h>
 #include <MQTT.h>
 
+//#include <ArduinoJson.h>
+
 #include "ciotc_config.h" // Wifi configuration here
 
 // Clout IoT configuration that you don't need to change
